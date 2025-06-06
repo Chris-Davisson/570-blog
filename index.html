@@ -20,7 +20,25 @@
       </div>
     </header>
 
-    <h2>Introduction</h2>
+    <nav class="table-of-contents">
+      <h2>Table of Contents</h2>
+      <ol>
+        <li><a href="#introduction">Introduction</a></li>
+        <li><a href="#objective">Explicitly Stated Objective</a></li>
+        <li><a href="#background">Background</a></li>
+        <li><a href="#tools">Tools</a></li>
+        <li><a href="#virustotal">VirusTotal Results</a></li>
+        <li><a href="#impressions">Initial Impressions</a></li>
+        <li><a href="#testing">Testing</a></li>
+        <li><a href="#deobfuscation">Deobfuscation</a></li>
+        <li><a href="#endpoints">End points</a></li>
+        <li><a href="#roadblocks">Roadblocks</a></li>
+        <li><a href="#final-thoughts">Final Thoughts</a></li>
+        <li><a href="#references">References</a></li>
+      </ol>
+    </nav>
+
+    <h2 id="introduction">Introduction</h2>
     <p>
       I chose this because I had done several projects on Chromium extensions and was currently doing more in this and other classes, and I could see how they could easily be leveraged for malicious behaviour. Though due to it being written in JavaScript (JS) there is less use of the tools we covered in class (Ghidra, Radare2) but I think there is still relevant value in this project. As is often the case with malicious JS the malware I chose was heavily obfuscated and tried to prevent static analysis. Strings were broken up and encoded into separate memory locations, function names were altered and general behaviour was hidden from a cursory viewer.
     </p>
@@ -36,12 +54,12 @@
       I chose this one because from all I could tell it was relatively harmless. If the extension was not loaded, or the network was not on then it seems to be inert. As this is my first time reversing actual malware, starting soft seemed like a good idea.
     </p>
 
-    <h2>Explicitly Stated Objective</h2>
+    <h2 id="objective">Explicitly Stated Objective</h2>
     <p>
       The objective is to fully understand what this malware is trying to do and who it is communicating with. This includes deobfuscating any obfuscated files.
     </p>
 
-    <h2>Background</h2>
+    <h2 id="background">Background</h2>
     <p>
       This is a real malware sample from Malware Bazaar.<br>
       <b>SHA256:</b> a8e26db74a9f847a8adbd023b98ea5924cb801c756bb0ab12714a1878eae7d9f
@@ -54,7 +72,7 @@
       <b>Description:</b> Introducing RenderWave - your one-stop browser extension for generating unique and custom textures for your Roblox creations!
     </p>
 
-    <h2>Tools</h2>
+    <h2 id="tools">Tools</h2>
     <ul>
       <li>VirtualBox - Kali, no network connection after downloading malware</li>
       <li>Raspberry Pi 3b - Ubuntu</li>
@@ -65,10 +83,10 @@
       <li><a href="https://deobfuscate.io/" target="_blank">deobfuscate.io</a></li>
     </ul>
 
-    <h2>VirusTotal Results</h2>
+    <h2 id="virustotal">VirusTotal Results</h2>
     <p>One vendor, Kaspersky, correctly identified it as malware.</p>
 
-    <h2>Initial Impressions</h2>
+    <h2 id="impressions">Initial Impressions</h2>
     <p>
       Upon unzipping the file from Malware Bazaar it appeared as a standard web extension. The manifest requests permission for: cookies, all urls, scripting, webNavigation, active tab, storage, and tabs. Interestingly the manifest version does not match the date when this first showed up. Malware Bazaar has it first showing up in 2025-04-01 and is in manifest version 2, but Chromium stopped accepting V2 in 2022. One reason may be manifest V2 being more open to abuse. It allows for broader permissions, background pages as opposed to service workers, and some reports of dynamic code execution.
     </p>
@@ -96,7 +114,7 @@
       <li>background.js</li>
     </ul>
 
-    <h2>Testing</h2>
+    <h2 id="testing">Testing</h2>
     <p>
       I was curious what it would do so after downloading I loaded it into Chrome, removed the network connection on the VM and tried to measure what happened. I got nothing. As there was no network connection, there was also no packet capture.
     </p>
@@ -115,7 +133,7 @@
       I then added each of these to my firewall's blacklist, just to be sure.
     </p>
 
-    <h2>Deobfuscation</h2>
+    <h2 id="deobfuscation">Deobfuscation</h2>
     <p>
       This was the hard part. There were some functions that were not obfuscated like <code>sendInfoToBackend</code>, <code>fetchAndSendAllCookies</code>, and <code>sendAllCookiesToBackend</code>. Just the naming of these gives away the intent of the software. I don't know why the author left the most incriminating functions un-obfuscated.
     </p>
@@ -126,7 +144,7 @@
       This file seems to handle the actual theft of cookies. It also captures and uses two-auth information by serving as a middle man between the user and the Roblox servers. After that it attempts to steal the other cookies.
     </p>
 
-    <h3>content.js</h3>
+    <h3 id="content-js">content.js</h3>
     <p>
       This file seems to handle the security login for Roblox. It tries to convince the user to enable dev mode, opening it up to cookie theft.
     </p>
@@ -139,11 +157,11 @@
       <code>modifyUpdateTwoStepModal</code>
     </p>
 
-    <h3>popup.js</h3>
+    <h3 id="popup-js">popup.js</h3>
     <h4>What this seems to handle</h4>
     <!-- Content left as an anchor for future detail -->
 
-    <h2>End points</h2>
+    <h2 id="endpoints">End points</h2>
     <ol>
       <li>https://otp-fetch-6872ed07da0d.herokuapp.com/getOtp</li>
       <li>https://auth-key-send-08cf6b13b3e3.herokuapp.com/sendToDiscord</li>
@@ -152,7 +170,7 @@
       <li>https://all-cookies-send-28f7bf31bc67.herokuapp.com/sendToDiscord</li>
     </ol>
 
-    <h2>Roadblocks</h2>
+    <h2 id="roadblocks">Roadblocks</h2>
     <p>
       Trying to set up a network that I would feel safe running malware from was hard. I ended up choosing to isolate it into its own subnet, run it on a sacrificial Pi with a fresh OS, use a VPN to hide my IP address and change my firewall to only allow VPN network for a small period of time. This seemed to work. I wanted to just use a public wifi but was unsure of the legality of that.
     </p>
@@ -160,12 +178,12 @@
       I tried to deobfuscate the code myself. Using a series of <code>console.log</code>'s at points where it would normally have the deobfuscated code, but it was too tangled. I was able to get bits and pieces, but ultimately it was better to use a tool built for it.
     </p>
 
-    <h2>Final Thoughts</h2>
+    <h2 id="final-thoughts">Final Thoughts</h2>
     <p>
       This took me longer than I wanted. Looking back, knowing what I know now I could deobfuscate most of the endpoints by hand in a couple hours. But jumping in blind left me trying to follow several large blocks of confusing code. Sorta wish I chose something more low level so that I could use the tools we learned about but I think this project would make a good weekly project.
     </p>
 
-    <h2>References</h2>
+    <h2 id="references">References</h2>
     <ul>
       <li><a href="https://obf-io.deobfuscate.io/" target="_blank">obf-io.deobfuscate.io</a></li>
       <li><a href="https://deobfuscate.io/" target="_blank">deobfuscate.io</a> - noticed that it was using obf-io.deobfuscate.io and recommended it.</li>

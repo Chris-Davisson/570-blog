@@ -88,6 +88,73 @@ blockquote {
   content: "•";
   margin-right: 1rem;
 }
+.table-of-contents {
+  background: #f8fafc;
+  border-radius: 12px;
+  padding: 2rem;
+  margin: 2rem 0 3rem;
+  border: 1px solid #e2e8f0;
+}
+
+.table-of-contents h2 {
+  margin-top: 0;
+  color: #2d3748;
+  font-size: 1.4em;
+}
+
+.table-of-contents ol {
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
+  counter-reset: toc;
+}
+
+.table-of-contents ol > li {
+  counter-increment: toc;
+  margin-bottom: 0.5rem;
+  margin-left: 2rem;
+  position: relative;
+}
+
+.table-of-contents ol > li::before {
+  content: counter(toc, decimal-leading-zero);
+  position: absolute;
+  left: -2rem;
+  color: #718096;
+  font-size: 0.9em;
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 500;
+}
+
+.table-of-contents ul {
+  margin: 0.5rem 0 1rem 1.5rem;
+  list-style-type: none;
+}
+
+.table-of-contents ul li {
+  margin-bottom: 0.25rem;
+  position: relative;
+}
+
+.table-of-contents ul li::before {
+  content: "→";
+  position: absolute;
+  left: -1.2rem;
+  color: #718096;
+}
+
+.table-of-contents a {
+  color: #4a5568;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.table-of-contents a:hover {
+  color: #4d81b7;
+  text-decoration: none;
+  padding-left: 0.2rem;
+}
+
 @media (max-width: 900px) {
   .container { padding: 24px 10px; }
 }
