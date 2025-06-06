@@ -138,18 +138,13 @@
       This was the hard part. There were some functions that were not obfuscated like <code>sendInfoToBackend</code>, <code>fetchAndSendAllCookies</code>, and <code>sendAllCookiesToBackend</code>. Just the naming of these gives away the intent of the software. I don't know why the author left the most incriminating functions un-obfuscated.
     </p>
     <p>
-      The rest and most of the objects are encoded into large arrays of strings and encoded with URI and obfuscated with hex math.
-    </p>
-    <p>
-      This file seems to handle the actual theft of cookies. It also captures and uses two-auth information by serving as a middle man between the user and the Roblox servers. After that it attempts to steal the other cookies.
+      The majority of the code was encoded using JavaScript's encodeURI, and arge arrays of strings were mapped to variables, making it hard to de obfuscate by hand. The developer did this to hide keywords, endpoints and anything else they didn't want seen by static analysis.
+      At first I tried to de obfuscate by hand, but I quickly got lost and confused so I resorted to using a tool. https://deobfuscate.io/ and https://obf-io.deobfuscate.io/ helped a lot and made the code readable. They removed the URI encoding and de-mapped most of the strings. After cleaning up it was much easier to follow the logic and see what the program was trying to do. 
     </p>
 
     <h3 id="content-js">content.js</h3>
     <p>
-      This file seems to handle the security login for Roblox. It tries to convince the user to enable dev mode, opening it up to cookie theft.
-    </p>
-    <p>
-      Here I see more suspicious function names:<br>
+      Here I see more suspicious function names for example:<br>
       <code>replaceAccessibilityLinkWithDevMode</code><br>
       <code>hideElementByIds</code><br>
       <code>modifyMainContent</code><br>
@@ -157,9 +152,7 @@
       <code>modifyUpdateTwoStepModal</code>
     </p>
 
-    <h3 id="popup-js">popup.js</h3>
-    <h4>What this seems to handle</h4>
-    <!-- Content left as an anchor for future detail -->
+    <p>Other than those the main thing I found was URI en</p>
 
     <h2 id="endpoints">End points</h2>
     <ol>
